@@ -1,1 +1,1 @@
-# Predicting Titanic Survivors using Neural Networks
+# Predicting Titanic Survivors using Neural Networks (AI Project)
