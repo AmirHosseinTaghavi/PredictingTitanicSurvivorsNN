@@ -114,8 +114,6 @@ def get_manipulated_train():
 	df['Title'] = df['Title'].fillna(0)
 	df = df.drop(['Name', 'SibSp', 'Parch'],axis=1)
 
-	print(df.head())
-
 	Y = df['Survived'].values
 	X = df.values
 	X = np.delete(X,1,axis=1)
