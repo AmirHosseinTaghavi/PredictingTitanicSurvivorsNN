@@ -16,8 +16,11 @@ def get_manipulated_train():
 	titanic_redundant = pd.concat(redundant, axis=1)
 	df = pd.concat((df,titanic_redundant),axis=1)
 	df = df.drop(['Pclass','Sex','Embarked'],axis=1)
+	
+	#Old method for age
 	#df['Age'] = df['Age'].interpolate()
 	
+	#New method but not efficient for age
 	#age_avg = df['Age'].mean()
 	#age_std = df['Age'].std()
 	#age_null_count = df['Age'].isnull().sum()
@@ -25,8 +28,13 @@ def get_manipulated_train():
 	#df['Age'][np.isnan(df['Age'])] = age_null_random_list
 	#df['Age'] = df['Age'].astype(int)
 
+	#Make new col for Titles with passed function
 	df['Title'] = df['Name'].apply(get_title)
 
+	#New and maybe better than before for fill empty ages
+	#iterate through df and fill empty ages according to the
+	#relation between sex, pClass, Title shown in fig 1
+	#row[1] means existance of passenger in pClass 1  
 	for index, row in df.iterrows():
 		if np.isnan(row['Age']):
 			if row['male'] == 0 and row[1] == 1:
@@ -88,11 +96,15 @@ def get_manipulated_train():
 	df.loc[ df['Fare'] > 31, 'Fare'] = 3
 	df['Fare'] = df['Fare'].astype(int)
 
+	#Calculate FamilySize based on SibSo and Parch and add new 
+	#column as IsAlone
 	df['FamilySize'] = df['SibSp'] + df['Parch'] + 1
 	df['IsAlone'] = 0
 	df.loc[df['FamilySize'] == 1, 'IsAlone'] = 1
 	df = df.drop(['FamilySize'],axis=1)
 
+	#Replace less-used titles with more-used titles and map number 
+	#for each.
 	df['Title'] = df['Title'].replace(['Lady', 'Countess','Capt', 'Col','Don', 'Dr', 'Major', 'Rev', 'Sir', 'Jonkheer', 'Dona'], 'Rare')
 	df['Title'] = df['Title'].replace('Ms', 'Miss')
 	df['Title'] = df['Title'].replace('Mlle', 'Miss')
@@ -144,10 +156,13 @@ def main():
 	boundaries=nl.tool.minmax(X_train)
 	size=len(Y_train)
 	target=np.reshape(Y_train,(size,1),1)
+	#Create network model
 	net = nl.net.newff(boundaries,[50, 1])
 	net.trainf=nl.train.train_rprop
 	score=0
+	#Training process
 	error = net.train(X_train, target, epochs=20, show=200)
+	#Test algorithm on test data frame
 	out = net.sim(X_test)
 	result=make_result(out)
 	score+=get_score(result,Y_test)
