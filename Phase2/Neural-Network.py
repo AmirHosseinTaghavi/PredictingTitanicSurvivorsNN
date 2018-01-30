@@ -6,7 +6,7 @@ import neurolab as nl
 import re as re
 
 def get_manipulated_train():
-	df = pd.read_csv('./data/train.csv',header=0)
+	df = pd.read_csv('../data/train.csv',header=0)
 	columns = ['Ticket','Cabin']
 	df = df.drop(columns,axis=1)
 	redundant = []
