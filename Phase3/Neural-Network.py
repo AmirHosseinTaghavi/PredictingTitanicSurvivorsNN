@@ -10,8 +10,8 @@ def get_manipulated_train():
 	columns = ['Ticket','Cabin']
 	df = df.drop(columns,axis=1)
   
-  #new
-  df.loc[df['PassengerId'] == 62, "Embarked"] = 'C'
+  	#new
+  	df.loc[df['PassengerId'] == 62, "Embarked"] = 'C'
 	df.loc[df['PassengerId'] == 830, "Embarked"] = 'C'
   
 	redundant = []
@@ -88,7 +88,7 @@ def get_manipulated_train():
 				elif row['Title'] == 'Mr':
 					df.set_value(index, 'Age', '26')
 
-  #new
+  	#new
 	df['Child'] = 0
 	df.loc[df['Age'] < 18, 'Child'] = 1
 	df['Mother'] = 0
